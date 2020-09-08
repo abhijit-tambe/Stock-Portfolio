@@ -54,6 +54,7 @@ router.get("/allPortfolios", (req, res, next) => {
       });
     });
 });
+
 router.post("/deleteStock", checkAuth, (req, res, next) => {
   console.log(req.body.stockId);
   Portfolio.updateOne(
@@ -76,9 +77,10 @@ router.post("/deleteStock", checkAuth, (req, res, next) => {
 });
 
 router.post("/addStocks", checkAuth, (req, res, next) => {
-  console.log(req.body.stockId);
+  //   console.log(req.body.stockId);
   const stocks = [];
   for (let i = 0; i < req.body.stocks.length; i++) {
+    // if (!symbols.has(req.body.stocks[i].symbol)) {
     const stock = {
       _id: mongoose.Types.ObjectId(),
       symbol: req.body.stocks[i].symbol,
@@ -87,8 +89,32 @@ router.post("/addStocks", checkAuth, (req, res, next) => {
       priceWhenAdded: req.body.stocks[i].currentPrice,
     };
     stocks.push(stock);
+    // }
   }
-
+  //   Portfolio.find({ _id: req.body.portfolioId })
+  //     .exec()
+  //     .then((doc) => {
+  //       console.log("doc", doc[0].stocks.length);
+  //       const symbols = new Set();
+  //       doc[0].stocks.forEach((stockObject) => {
+  //         symbols.add(stockObject.symbol);
+  //       });
+  //       console.log(symbols);
+  //       for (let i = 0; i < req.body.stocks.length; i++) {
+  //         if (!symbols.has(req.body.stocks[i].symbol)) {
+  //           const stock = {
+  //             _id: mongoose.Types.ObjectId(),
+  //             symbol: req.body.stocks[i].symbol,
+  //             purchasePrice: req.body.stocks[i].purchasePrice,
+  //             shares: 0,
+  //             priceWhenAdded: req.body.stocks[i].currentPrice,
+  //           };
+  //           stocks.push(stock);
+  //         }
+  //       }
+  //     })
+  //     .catch();
+  console.log(stocks);
   Portfolio.findByIdAndUpdate(
     { _id: req.body.portfolioId },
     { $push: { stocks: stocks } }
