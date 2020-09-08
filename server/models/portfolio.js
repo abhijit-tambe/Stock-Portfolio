@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
-const schema = mongoose.Schema();
+const Schema = mongoose.Schema;
 const stock = require("./stock");
 
-const PortfolioSchema = new schema({
+const PortfolioSchema = new Schema({
   _id: mongoose.Schema.Types.ObjectId,
-  name: String,
-  stock: stock,
+  portfolioName: String,
+  email: String,
+  userId: String,
+  stocks: [stock],
 });
 
 module.exports = mongoose.model("portfolio", PortfolioSchema, "portfolios");
