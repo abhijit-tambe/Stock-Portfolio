@@ -1,13 +1,12 @@
 .sidebarRow{
     display:flex;
     align-items: center;
-    padding:10px
+    padding: 10px 30px;
+    /* padding:10px; */
 }
 .sidebarRow:hover{
-    /* display:flex; */
-    /* align-items: center; */
-    /* padding:10px */
-    border-left:10px solid blue;
+    border-left: 6px solid rgb(50, 150, 250);
+    
     
 }
 .sidebarRow >h4{

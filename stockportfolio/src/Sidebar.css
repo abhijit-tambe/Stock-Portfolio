@@ -2,3 +2,9 @@
 background-color: black;
 color: white;
 } */
+
+
+.sidebar > .my__portfolio >h5,.general>h5{
+    padding: 10px;
+    color: grey;
+}
