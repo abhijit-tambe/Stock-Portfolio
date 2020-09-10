@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
 import NotificationsActiveIcon from '@material-ui/icons/NotificationsActive';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import logo from './stock logo.png'
+import logo from './stock logo.png';
 
 
 function Header() {
