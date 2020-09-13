@@ -1,10 +1,19 @@
-/* .sidebar{
+.sidebar{
+    flex:0.30;
 background-color: black;
 color: white;
-} */
+padding: 30px 0px;
+}
 
 
 .sidebar > .my__portfolio >h5,.general>h5{
     padding: 10px;
     color: grey;
+}
+
+
+
+.sidebar .my__portfolio .MuiSvgIcon-root{
+    font-size: x-large;
+    /* color: red; */
 }

@@ -9,6 +9,9 @@
     
     
 }
+.sidebarRow:active{
+    color: rgb(50, 150, 250);
+}
 .sidebarRow >h4{
     padding-left:10px
 }
