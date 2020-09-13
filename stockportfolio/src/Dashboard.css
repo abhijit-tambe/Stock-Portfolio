@@ -1,0 +1,15 @@
+/* .dashboard{
+    flex:1;
+    color: red;
+    background-color: limegreen;
+    padding:20px;
+    margin: 30px 150px;
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+} */
+
+.dashboard{
+    flex:1;
+}

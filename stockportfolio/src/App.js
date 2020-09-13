@@ -6,6 +6,9 @@ import MaterialDemo from "./components/MaterialDemo";
 import SignIn from "./components/SignIn";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import Dashboard from "./Dashboard";
+import './App.css';
+import Demo from "./components/HighchartsDemo";
 
 function App() {
   return (
@@ -13,6 +16,9 @@ function App() {
      <Header/>
      <div className="app__body">
          <Sidebar/>
+         <Dashboard/>
+         {/* <Demo/> */}
+        
      </div>
       
       
