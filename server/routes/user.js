@@ -10,12 +10,19 @@ router.get("/", (req, res, next) => {
 });
 
 router.get("/allusers", (req, res, next) => {
+  let allUsers = {
+    count:0,
+    users:[]
+  }
   User.find()
     // .select("email password")
+    
     .exec()
     .then((doc) => {
       if (doc) {
-        res.status(200).json(doc);
+        allUsers.count = doc.length;
+        allUsers.users =doc;
+        res.status(200).json(allUsers);
       }
     })
     .catch();
