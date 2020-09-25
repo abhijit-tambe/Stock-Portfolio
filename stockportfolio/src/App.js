@@ -9,6 +9,9 @@ import Sidebar from "./Sidebar";
 import Dashboard from "./Dashboard";
 import './App.css';
 import Demo from "./components/HighchartsDemo";
+import Button from "./components/Button";
+
+
 
 function App() {
   return (
@@ -18,7 +21,7 @@ function App() {
          <Sidebar/>
          <Dashboard/>
          {/* <Demo/> */}
-        
+          <Button/>
      </div>
       
       
