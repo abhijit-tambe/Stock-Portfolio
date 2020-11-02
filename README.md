@@ -16,3 +16,5 @@ API routes available
 
 it is connected to mongodb to keep the users, dashboard data.
  
+ 
+ stock portfolio folder contains the front end its in reactjs 
