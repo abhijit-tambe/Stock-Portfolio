@@ -9,11 +9,11 @@ import {createStore ,applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 import thunk from 'redux-thunk';
 import rootReducer from './store/reducers/index'
-
+import {composeWithDevTools} from 'redux-devtools-extension';
 
 const middleware = applyMiddleware(thunk);
 
-const store = createStore(rootReducer,middleware);
+const store = createStore(rootReducer,composeWithDevTools(middleware));
 
 ReactDOM.render(
   

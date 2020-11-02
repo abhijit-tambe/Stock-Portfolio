@@ -23,9 +23,6 @@ function App() {
          {/* <Demo/> */}
           <Button/>
      </div>
-      
-      
-      
     </div>
   );
 }

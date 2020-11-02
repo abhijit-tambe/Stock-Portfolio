@@ -16,7 +16,7 @@ const initialState = {
             switch(actions.type){
                 case 'UPDATE':
                     return {
-                        // ...state,
+                        ...state,
                         title: {
                             text: actions.payload.data[0]
                           },
