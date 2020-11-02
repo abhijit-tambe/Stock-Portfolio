@@ -15,3 +15,4 @@ API routes available
 '/api/stocks' it calls external stock api to get all current stock market json data
 
 it is connected to mongodb to keep the users, dashboard data.
+ 
