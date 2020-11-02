@@ -20,8 +20,6 @@ function App() {
      <div className="app__body">
          <Sidebar/>
          <Dashboard/>
-         {/* <Demo/> */}
-          <Button/>
      </div>
     </div>
   );
