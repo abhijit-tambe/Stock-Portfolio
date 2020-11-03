@@ -1,0 +1,18 @@
+.register{
+    /* width: 500px;
+    height:900px;
+    background-color: red; */
+    /* height: 100vh; */
+  
+}
+
+.register__form{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    height: 300px;
+    width: 300px;
+    margin: 100px auto;
+    border:1px solid black;
+}    
