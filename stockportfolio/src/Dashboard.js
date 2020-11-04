@@ -1,6 +1,6 @@
 import React from 'react'
 import './Dashboard.css'
-import MyHoldings from './MyHoldings'
+
 import Demo from './components/HighchartsDemo'
 function Dashboard() {
     return (
