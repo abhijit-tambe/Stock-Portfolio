@@ -1,5 +1,5 @@
 import React from 'react'
-import './Register.css';
+import './SignIn.css';
 import  {useSelector,useDispatch} from 'react-redux';
 import {useState} from 'react';
 import {AUTH_START} from '../../store/actions/authActions';
@@ -23,7 +23,7 @@ function SignIn (){
     // console.log('store:',store);
 
     return(
-        <div className ='register'>
+        <div className ='signIn'>
          {/* <div>{store.token && <p> token:das </p>}
          <br/> 
          {store.userId&& <p>user:store.userId </p>}
@@ -36,7 +36,7 @@ function SignIn (){
          {store.error && `error :${store.error}` }
          {store.isLoggedIn && `error :${store.isLoggedIn}` }
         
-            <form className="register__form" onSubmit={submitData}>
+            <form className="signIn__form" onSubmit={submitData}>
             <Typography component="h1" variant="h5">
           Sign in
         </Typography>
