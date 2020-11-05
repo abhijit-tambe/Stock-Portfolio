@@ -12,27 +12,29 @@ import './App.css';
 // import Button from "./components/Button";
 import Register from "./components/Register/Register";
 import {BrowserRouter as Router,Switch,Route} from 'react-router-dom'
+import Sign_In from "./components/Sign_In";
 
 
 function App() {
   return (
     <Router>
     <Switch>
-    <Route path="/" exact>
-    <div className="app">
-     <Header/>
-     <div className="app__body">
-         <Sidebar/>
-         <Dashboard/>
-         <Register/>
-     </div>
-    </div>
-    </Route>
+   
     <Route path="/register" exact>
       <Register/>
     </Route>
     <Route path ="/signin" exact>
       <SignIn/>
+    </Route>
+    <Route path="/:id" exact>
+    <div className="app">
+     <Header/>
+     <div className="app__body">
+         <Sidebar/>
+         <Dashboard/>
+         {/* <Register/> */}
+     </div>
+    </div>
     </Route>
     </Switch>
     </Router>

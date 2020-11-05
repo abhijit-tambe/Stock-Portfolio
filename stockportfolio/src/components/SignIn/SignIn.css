@@ -1,18 +1,87 @@
 .signIn{
-    /* width: 500px;
-    height:900px;
-    background-color: red; */
-    /* height: 100vh; */
+   display: flex;  
+   flex-direction: column;
+   /* justify-content: center; */
+   align-items: center;
+}
+
+.signIn__logo{
+  height: 100px;
+  object-fit: contain;
+  margin: 10px auto 0px;
+}
+
+.signIn__container{
+    box-sizing: border-box;
+    display:flex;
+    flex-direction: column;
+    height: 400px;
+    width: 300px;
+    border:1px solid lightgrey;
+    /* padding:50px 20px; */
+    padding:30px 20px 0px;
+}    
+
+.signIn__title{
+  font-weight: 700!important;
+  /* font-size: 40px !important; */
   
 }
 
-.signIn__form{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
-    
-    height: 300px;
-    width: 300px;
-    margin: 100px auto;
-    border:1px solid black;
-}    
+.signIn__form >label{
+  display: block;
+  margin: 5px 0px;
+}
+
+.signIn__form >input{
+  display: block;
+  height: 30px;
+  width: 95%;
+  margin: 5px 0;
+}
+
+.signIn__button{
+  margin:20px 0px;
+  width: 98%;
+  height: 30px;
+  /* background-color: rgb(0, 0, 66); */
+  background-color: rgb(75, 150, 225);
+  /* color: whitesmoke; */
+  border:1px solid skyblue;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+
+.signIn_newAccount{
+  background-color: rgb(222, 222, 222);
+  border-color: silver;
+}
+
+
+.signIn__createAccountTitle{
+font-size: 12px!important;
+font-weight: 500!important;
+text-align: center;
+display: block;
+margin:20px auto!important; 
+}
+
+.signIn__error{
+  background-color: red;
+}
+
+.signIn__message{
+  display: flex;
+  justify-content: center;
+  height: 50px;
+  align-items: center;
+  width: 500px;
+  /* margin: 50px auto 0px auto; */
+  margin-bottom: 10px;
+  color: white;
+}
+
+.signIn__success{
+    background-color: lightgreen;
+}
