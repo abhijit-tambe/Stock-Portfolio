@@ -14,12 +14,13 @@ const authReducer = (state= initialState, action)=>{
     switch(action.type){
         // case actionTypes.AUTH_SUCCESS:
         case actionTypes.AUTH_SUCCESS:
+            console.log('action');
             return{
                 ...state,
                 ...action.payload
             };
         case actionTypes.AUTH_FAIL:
-            console.log('fail')
+            console.log(action.payload.error.response.data.message);
             return{
                 ...state,
                 ...action.payload
