@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const user = require('./user');
+const User = require('./user');
 const Schema = mongoose.Schema;
 
 
@@ -18,7 +18,7 @@ const portfolioSchema = new Schema({
     name:String,
     userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:user
+        ref:User
     },
     stocks:[stockSchema]
 });
