@@ -45,10 +45,23 @@ class userController {
     }
   }
 
-  // getUser(req,res){
-  //     let id = req.params.id
-  //     res.status(200).json({});
-  // }
+  async getUser(req,res){
+    try{
+      let id = req.params.id;
+      let user = await userService.findUserById(id);
+      console.log('user',user);
+      if(user){
+      res.status(200).json(user);
+      }else{
+        res.status(501).json({ message: "error occured" });
+      }
+
+    }catch(err){
+      res.status(501).json({ message: "error occured" });
+    }
+      
+      
+  }
 
   async getAllUsers(req, res) {
     try {
