@@ -18,18 +18,17 @@ class userController {
     }
   }
 
-//   updateUser(req, res) {
-//     res.status(200).json({});
-//   }
+  //   updateUser(req, res) {
+  //     res.status(200).json({});
+  //   }
 
-//   addUserPortfolio(req,res){
-//     res.status(200).json({});
-//   }
+  //   addUserPortfolio(req,res){
+  //     res.status(200).json({});
+  //   }
 
-  deleteUserPortfolio(req,res){
+  deleteUserPortfolio(req, res) {
     res.status(200).json({});
   }
-
 
   async deleteUser(req, res) {
     let id = req.params.id;
@@ -45,22 +44,19 @@ class userController {
     }
   }
 
-  async getUser(req,res){
-    try{
+  async getUser(req, res) {
+    try {
       let id = req.params.id;
       let user = await userService.findUserById(id);
-      console.log('user',user);
-      if(user){
-      res.status(200).json(user);
-      }else{
+      console.log("user", user);
+      if (user) {
+        res.status(200).json(user);
+      } else {
         res.status(501).json({ message: "error occured" });
       }
-
-    }catch(err){
+    } catch (err) {
       res.status(501).json({ message: "error occured" });
     }
-      
-      
   }
 
   async getAllUsers(req, res) {

@@ -11,7 +11,10 @@ const portfolioSchema = new Schema({
   stocks: [
     {
       symbol: String,
-      shares: Number,
+      shares: {
+        type: Number,
+        default: 0,
+      },
       purchasePrice: Number,
       addedPrice: Number,
       dateAdded: {

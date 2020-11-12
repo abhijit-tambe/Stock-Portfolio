@@ -31,7 +31,7 @@ class PortfolioService{
         return Portfolio.find({_id:id}).populate('userId').exec();
     }
 
-    addStockToPortfolio(data){
+    addStock(data){
         console.log('hit');
         console.log(data);
             let portfolioId = data.portfolioId;
@@ -40,21 +40,29 @@ class PortfolioService{
             newStock.shares = data.shares;
             newStock.purchasePrice = data.purchasePrice;
             newStock.addedPrice =data.addedPrice; 
-            console.log('new',newStock);
-            // console.log('object')
         return Portfolio.update({_id: portfolioId},{$push:{stocks:newStock}});
     }
 
-    addMultiStockToPortfolio(data){
+    addMultiStock(data){
         console.log('hit');
         console.log(data);
         return Portfolio.updateMany({_id: data.portfolioId},{$push:{stocks:{$each:data.stock}}});
     }
 
-    deleteStockFromPortfolio(data){
+
+
+    updateStock(data){
+        console.log('hit',data);
+        return Portfolio.update({"stocks._id":data.stockId},{$set:{"stocks.$.purchasePrice":data.purchasePrice,"stocks.$.shares":data.shares}});
+        // db.portfolios.update({"stocks._id":ObjectId("5facaf52d896e6417c05db66")},{$set:{"stocks.$.purchasePrice":4000,"stocks.$.shares":50}})
+    }
+
+    deleteStock(id){
         console.log('hit')
-        return Portfolio.update({_id: data.portfolioId},{$pull:{stocks:{_id:data.stockId}}});
+        return Portfolio.update({"stocks._id": id},{$pull:{stocks:{_id:id}}});
         // db.portfolios.update({_id: ObjectId("5fac6c193d599876b44eb28e")},{$pull:{stocks:{_id:ObjectId("5fac6c193d599876b44eb28f")}}})
+        // db.portfolios.update({"stocks._id":ObjectId("5facaeced896e6417c05db65")},{$pull:{stocks:{_id:ObjectId("5facaeced896e6417c05db65")}}})
+        
     }
 
 }

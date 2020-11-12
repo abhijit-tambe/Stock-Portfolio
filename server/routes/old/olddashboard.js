@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const checkAuth = require("../middleware/jwtAuth");
+const checkAuth = require("../../middleware/jwtAuth");
 const User = require("../models/user");
 
 router.get("/", checkAuth, (req, res, next) => {

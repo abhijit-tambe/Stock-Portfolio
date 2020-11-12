@@ -8,11 +8,29 @@ const PortfolioController = require('../controller/portfolioController');
 
 const portfolioController = new PortfolioController();
 
-router.post('/create',(req,res)=> portfolioController.createPortfolio(req,res));
+// router.post('/create',(req,res)=> portfolioController.createPortfolio(req,res));
+// router.get('/all',(req,res)=> portfolioController.getAllPortfolio(req,res));
+// router.get('/:id',(req,res)=> portfolioController.getPortfolioById(req,res));
+// router.post('/stock',(req,res)=> portfolioController.addStockToPortfolio(req,res));
+// router.post('/stocks',(req,res)=> portfolioController.addMultiStockToPortfolio(req,res));
+// router.put('/delstock',(req,res)=> portfolioController.deletestockFromPortfolio(req,res));
+
+
+//handle portfolio
+router.post('/create',(req,res)=> portfolioController.createPortfolio(req,res));//needed
 router.get('/all',(req,res)=> portfolioController.getAllPortfolio(req,res));
-router.get('/:id',(req,res)=> portfolioController.getPortfolioById(req,res));
-router.post('/stock',(req,res)=> portfolioController.addStockToPortfolio(req,res));
-router.post('/stocks',(req,res)=> portfolioController.addMultiStockToPortfolio(req,res));
-router.put('/delstock',(req,res)=> portfolioController.deletestockFromPortfolio(req,res));
+router.get('/:id',(req,res)=> portfolioController.getPortfolioById(req,res));//needed
+//update
+//delete
+
+//handle embeded stock in portfolio
+router.post('/stock/add',(req,res)=> portfolioController.addStockInPortfolio(req,res));//needed working
+router.post('/stock/multiadd',(req,res)=> portfolioController.addMultiStockInPortfolio(req,res));// working
+router.patch('/stock/update',(req,res)=> portfolioController.updatestockInPortfolio(req,res));//needed working
+router.delete('/stock/delete/:id',(req,res)=> portfolioController.deletestockInPortfolio(req,res));//needed working
+
+
+
+
 
 module.exports =router;
