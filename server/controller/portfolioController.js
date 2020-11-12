@@ -13,12 +13,12 @@ class PortfolioController {
       let portfolioExist = await portfolioService.getPortfolio(data.name);
       if (portfolioExist < 1) {
         let newPortfolio = await portfolioService.createPortfolio(data);
-        let updateUserPortfolio = await userService.addUserPortfolio(
+        let updateUserPortfolioRecord = await userService.addUserPortfolio(
           data.userId,
           newPortfolio._id
         );
-        if (updateUserPortfolio) {
-          res.status(200).json(updateUserPortfolio);
+        if (updateUserPortfolioRecord) {
+          res.status(200).json(newPortfolio);
         } else {
           res.status(500).json({ message: "error occured1" });
         }
@@ -29,19 +29,39 @@ class PortfolioController {
       res.status(500).json({ message: "error occured" });
     }
   }
+ 
+  async deletePortfolioById(req, res) {
+    console.log('controller hit');
+    let id = req.params.id;
+    try{
+        let portfolio = await portfolioService.getPortfolioById(id);
+        let portfolioDeleted = await portfolioService.deletePortfolio(id);
+        let deleteUserPortfolioRecord = await userService.deleteUserPortfolio(portfolio[0].userId,id);
+          // console.log('portfolio',portfolio);
+          // console.log("portfolio deleted", portfolioDeleted);
+          // console.log('deleted user porfolio reacord',deleteUserPortfolioRecord);
+          if(deleteUserPortfolioRecord.nModified===1){
+          res.status(200).json({message:"portfolio deleted"});
+        }else{
+          res.status(500).json({message:"error occured"});
+        }   
+    }catch(err){
+      res.status(500).json({ message: "error occured" });
+    }
+  }
 
-  deletePortfolio(req, res) {}
+  updatePortfolio(req, res) {
 
-  updatePortfolio(req, res) {}
+  }
 
   async getPortfolioById(req, res) {
     try {
       let id = req.params.id;
       let portfolio = await portfolioService.getPortfolioById(id);
-      if (portfolio) {
+      if (portfolio.length===1) {
         res.status(200).json(portfolio);
       } else {
-        res.status(404).json({ message: "portfolio does not exist" });
+        res.status(500).json({ message: "portfolio does not exist" });
       }
     } catch (err) {
       res.status(500).json({ message: "error occured" });

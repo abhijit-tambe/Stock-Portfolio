@@ -9,7 +9,7 @@ const UserController = require('../controller/userController');
 let userController = new UserController(); 
 
 router.get('/all',(req,res)=>userController.getAllUsers(req,res));//working
-router.get('/user/:id',(req,res)=>userController.getUser(req,res));
+router.get('/:id',(req,res)=>userController.getUser(req,res));
 router.post('/register',(req,res)=>userController.createUser(req,res));//working
 router.get('/signin',(req,res)=>userController.deleteUser(req,res));
 router.get('/update/:id',(req,res)=>userController.deleteUser(req,res));

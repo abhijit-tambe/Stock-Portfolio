@@ -13,7 +13,8 @@ class UserService {
     }
 
     findUserById(id){
-        return User.find({_id:id}).populate('portfolios').exec();
+        // return User.find({_id:id}).populate('portfolios').exec();
+        return User.find({_id:id}).exec();
     }
 
     addUserPortfolio(userId,portfolioId){
@@ -23,7 +24,7 @@ class UserService {
     }
 
     deleteUserPortfolio(userId,portfolioId){
-      return User.findOneAndUpdate({_id:userId},{$pull:{portfolios:portfolioId}});
+      return User.update({_id:userId},{$pull:{portfolios:portfolioId}});
     }
 
 
@@ -38,6 +39,7 @@ class UserService {
 
     getAllUsers(){
     return User.find({}).populate('portfolios').exec(); 
+    // return User.find({}).exec(); 
     }
 
 
