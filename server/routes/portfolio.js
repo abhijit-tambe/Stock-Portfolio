@@ -17,17 +17,17 @@ const portfolioController = new PortfolioController();
 
 
 //handle portfolio
-router.post('/create',(req,res)=> portfolioController.createPortfolio(req,res));// required && done
-router.get('/all',(req,res)=> portfolioController.getAllPortfolio(req,res));// done
-router.get('/:id',(req,res)=> portfolioController.getPortfolioById(req,res));// required && done
-router.patch('/update/',(req,res)=> portfolioController.updatePortfolio(req,res));
-router.delete('/delete/:id',(req,res)=> portfolioController.deletePortfolioById(req,res));// required && done
+router.post('/create',(req,res)=> portfolioController.createPortfolio(req,res));// required && done refactored
+router.get('/all',(req,res)=> portfolioController.getAllPortfolios(req,res));// done refactored
+router.get('/:id',(req,res)=> portfolioController.getPortfolioById(req,res));// required && done refactored
+router.patch('/update',(req,res)=> portfolioController.updateNameInPortfolio(req,res));// required refactored
+router.delete('/delete/:id/:pid',(req,res)=> portfolioController.deletePortfolioById(req,res));// required && done refactored
 
 //handle embeded stock in portfolio
-router.post('/stock/add',(req,res)=> portfolioController.addStockInPortfolio(req,res));// required && done
-router.post('/stock/multiadd',(req,res)=> portfolioController.addMultiStockInPortfolio(req,res));// done
-router.patch('/stock/update',(req,res)=> portfolioController.updatestockInPortfolio(req,res));// required && done
-router.delete('/stock/delete/:id',(req,res)=> portfolioController.deletestockInPortfolio(req,res));//required && done
+router.post('/stock/add',(req,res)=> portfolioController.addStockInPortfolio(req,res));// required && done refactored
+router.post('/stock/multiadd',(req,res)=> portfolioController.addMultiStockInPortfolio(req,res));// done refactiored
+router.patch('/stock/update',(req,res)=> portfolioController.updatestockInPortfolio(req,res));// required && done refactored
+router.delete('/stock/delete/:id',(req,res)=> portfolioController.deletestockInPortfolio(req,res));//required && done refactored
 
 
 

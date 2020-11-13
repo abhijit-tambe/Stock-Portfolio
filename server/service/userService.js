@@ -17,16 +17,28 @@ class UserService {
         return User.find({_id:id}).exec();
     }
 
-    addUserPortfolio(userId,portfolioId){
+
+    findUserPortfolioByName(userId,name){
+        return User.find({_id:userId,"portfolios.name":name}).exec();
+        // > db.users.find({ _id:ObjectId("5fad7a6fc7c770463865a5e1"),"portfolios.portfolioName":"ame"}).
+    }
+
+    addUserPortfolio(userId,id,name){
         console.log('adduser service')
-      return User.findOneAndUpdate({_id:userId},{$push:{portfolios:portfolioId}},{upsert:true});
+      return User.update({_id:userId},{$push:{portfolios:{id,name}}},{upsert:true});
+      // db.users.update({_id:ObjectId("5fad7a6bc7c770463865a5e0")},{$push:{portfolios:{"portfolioName":"ame"}}})
        
     }
 
     deleteUserPortfolio(userId,portfolioId){
-      return User.update({_id:userId},{$pull:{portfolios:portfolioId}});
+      return User.update({_id:userId},{$pull:{portfolios:{id:portfolioId}}});
     }
 
+
+    updateUserPortfolio(userId,portfolioId,name){
+      return User.update({_id:userId,"portfolios.id":portfolioId},{$set:{"portfolios.$.name":name}});
+      // > db.users.update({_id:ObjectId("5fadb68610e3ff51e05dc063"),"portfolios.id":"5fadb69710e3ff51e05dc065"},{$set:{"portfolios.$.name":"yae"}})
+    }
 
 
     deleteUser(id){
@@ -38,9 +50,10 @@ class UserService {
     }
 
     getAllUsers(){
-    return User.find({}).populate('portfolios').exec(); 
-    // return User.find({}).exec(); 
+    // return User.find({}).populate('portfolios').exec(); 
+    return User.find({}).exec(); 
     }
+
 
 
 }

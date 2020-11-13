@@ -6,7 +6,7 @@ class PortfolioService{
     createPortfolio(data){
         let portfolio = new Portfolio();
         portfolio.name = data.name;
-        portfolio.userId = data.userId;
+        // portfolio.userId = data.userId;
         portfolio.stocks = data.stocks;
         return portfolio.save();
     }
@@ -15,8 +15,8 @@ class PortfolioService{
         return Portfolio.findByIdAndDelete({_id:id});
     }
 
-    updatePortfolio(data){
-
+    updatePortfolioByName(id,name){
+        return Portfolio.update({_id:id},{$set:{name:name}}).exec();
     }
 
     getAllPortfolios(){
@@ -24,7 +24,7 @@ class PortfolioService{
         return Portfolio.find({}).exec();
     }
 
-    getPortfolio(name){
+    getPortfolioByName(name){
         return Portfolio.find({name:name});
     }
 
