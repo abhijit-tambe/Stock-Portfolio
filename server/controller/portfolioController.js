@@ -1,9 +1,6 @@
-const e = require("express");
 const PortfolioService = require("../service/portfolioService");
 const UserService = require("../service/userService");
-const util = require('util');
-const { update } = require("../database/models/user");
-const { error } = require("console");
+const util = require("util");
 
 const portfolioService = new PortfolioService();
 const userService = new UserService();
@@ -13,12 +10,12 @@ class PortfolioController {
     let data = req.body;
     console.log("portfolioController", data);
     try {
-      let portfolioExist = await userService.findUserPortfolioByName(
+      let portfolioExist = await userService.getUserPortfolioByName(
         data.userId,
         data.name
       );
-      console.log("pE", util.inspect(portfolioExist, false, 3, true));
-      if (portfolioExist.length < 1) {
+      // console.log("pE", util.inspect(portfolioExist, false, 3, true));
+      if (!portfolioExist) {
         let newPortfolio = await portfolioService.createPortfolio(data);
         let updateUserPortfolioRecord = await userService.addUserPortfolio(
           data.userId,
@@ -40,13 +37,13 @@ class PortfolioController {
   }
 
   async deletePortfolioById(req, res) {
-    console.log(req.params.id,req.params.pid);
+    console.log(req.params.id, req.params.pid);
     console.log("controller hit");
     let id = req.params.pid;
     try {
       let portfolio = await portfolioService.getPortfolioById(id);
-      console.log('portfolio',portfolio);
-      let portfolioDeleted = await portfolioService.deletePortfolio(id);
+      console.log("portfolio", portfolio);
+      let portfolioDeleted = await portfolioService.deletePortfolioById(id);
       console.log("portfolio deleted", portfolioDeleted);
       // let deleteUserPortfolioRecord = await userService.deleteUserPortfolio(
       //   portfolio[0].userId,
@@ -56,9 +53,8 @@ class PortfolioController {
         req.params.id,
         id
       );
-      
-      
-      console.log('deleted user porfolio reacord',deleteUserPortfolioRecord);
+
+      console.log("deleted user porfolio reacord", deleteUserPortfolioRecord);
       if (deleteUserPortfolioRecord.nModified === 1) {
         res.status(200).json({ message: "portfolio deleted" });
       } else {
@@ -87,7 +83,11 @@ class PortfolioController {
           );
           console.log("updatedName", updatedName);
           if (updatedName.nModified === 1) {
-            await userService.updateUserPortfolio(data.userId,data.portfolioId,data.newName);
+            await userService.updateUserPortfolioName(
+              data.userId,
+              data.portfolioId,
+              data.newName
+            );
             res.status(200).json({ message: "portfolio name update" });
           } else {
             // res.status(500).json({ message: "error 1" });

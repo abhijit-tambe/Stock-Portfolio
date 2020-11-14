@@ -8,11 +8,11 @@ const UserController = require('../controller/userController');
 
 let userController = new UserController(); 
 
-router.get('/all',(req,res)=>userController.getAllUsers(req,res));//working
-router.get('/:id',(req,res)=>userController.getUser(req,res));
-router.post('/register',(req,res)=>userController.createUser(req,res));//working
-router.get('/signin',(req,res)=>userController.deleteUser(req,res));
-router.get('/update/:id',(req,res)=>userController.deleteUser(req,res));
-router.delete('/delete/:id',(req,res)=>userController.deleteUser(req,res));//working
+router.post('/register',(req,res)=>userController.createUser(req,res));//required && done
+router.post('/signin',(req,res)=>userController.signInUser(req,res));//required && done
+router.patch('/update',(req,res)=>userController.updateUserPassword(req,res));//required && done
+router.delete('/delete/:id',(req,res)=>userController.deleteUser(req,res));//required && done
+router.get('/all',(req,res)=>userController.getAllUsers(req,res));//
+router.get('/:id',(req,res)=>userController.getUserById(req,res));// required && done
 
 module.exports =router;
