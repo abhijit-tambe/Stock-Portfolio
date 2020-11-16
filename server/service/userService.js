@@ -2,7 +2,7 @@ const User = require("../database/models/user");
 
 class UserService {
   createUser(data) {
-    let user = new User({ email: data.email, password: data.password });
+    let user = new User({ email: data.email, name:data.name, password: data.password });
     return user.save();
   }
 

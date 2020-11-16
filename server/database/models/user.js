@@ -10,6 +10,7 @@ const portfolioListSchema = new Schema({
 
 const userSchema = new Schema({
   email: String,
+  name:String,
   password: String,
   portfolios: [portfolioListSchema],
 });

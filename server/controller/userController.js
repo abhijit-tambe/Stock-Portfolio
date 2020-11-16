@@ -28,8 +28,9 @@ class userController {
       .signInUser(data.email, data.password)
       .then((user) => {
         console.log("login", user);
-        if (user)
-          res.status(200).json({ messsage: "user logged in successfully" });
+        if (user){
+          res.status(200).json({ userId:user._id, name:user.name, messsage: "user logged in successfully" });
+        }
         else res.status(401).json({ error: "wrong credentials" });
       })
       .catch((err) => {
