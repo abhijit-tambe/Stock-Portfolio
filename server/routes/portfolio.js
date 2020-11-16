@@ -1,135 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const checkAuth = require("../middleware/jwtAuth");
-const mongoose = require("mongoose");
-const Portfolio = require("../models/portfolio");
-const Stock = require("../models/stock");
+// const checkAuth = require("../middleware/jwtAuth");
+// const mongoose = require("mongoose");
+// const Portfolio = require("../models/portfolio");
+// const Stock = require("../models/stock");
+const PortfolioController = require('../controller/portfolioController');
 
-router.post("/newPortfolio", checkAuth, (req, res, next) => {
-  const userData = req.userData;
-  console.log("stocks : ", req.body.stocks);
-  const stocks = [];
-  for (let i = 0; i < req.body.stocks.length; i++) {
-    const stock = {
-      _id: mongoose.Types.ObjectId(),
-      symbol: req.body.stocks[i].symbol,
-      purchasePrice: req.body.stocks[i].purchasePrice,
-      shares: 0,
-      priceWhenAdded: req.body.stocks[i].currentPrice,
-    };
-    stocks.push(stock);
-  }
-  const portfolio = new Portfolio({
-    _id: mongoose.Types.ObjectId(),
-    portfolioName: req.body.portfolioName,
-    email: userData.email,
-    userId: userData.userId,
-    stocks: stocks,
-  });
-  portfolio
-    .save()
-    .then((doc) => {
-      console.log(doc);
-      res.status(200).json({
-        doc,
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        error,
-      });
-    });
-});
+const portfolioController = new PortfolioController();
 
-router.get("/allPortfolios", (req, res, next) => {
-  const portfolio = Portfolio.find()
-    // .select("portfolioName email stocks")
-    .exec()
-    .then((doc) => {
-      res.status(200).json(doc);
-    })
-    .catch((error) => {
-      res.status(500).json({
-        error,
-      });
-    });
-});
+//handle embeded stock in portfolio
+router.post('/stock/add',(req,res)=> portfolioController.addStockInPortfolio(req,res));// required && done refactored
+router.post('/stock/multiadd',(req,res)=> portfolioController.addMultiStockInPortfolio(req,res));// done refactiored
+router.patch('/stock/update',(req,res)=> portfolioController.updatestockInPortfolio(req,res));// required && done refactored
+router.delete('/stock/delete/:id',(req,res)=> portfolioController.deletestockInPortfolio(req,res));//required && done refactored
 
-router.post("/deleteStock", checkAuth, (req, res, next) => {
-  console.log(req.body.stockId);
-  Portfolio.updateOne(
-    { _id: req.body.portfolioId },
-    { $pull: { stocks: { _id: req.body.stockId } } },
-    { safe: true }
-  )
-    .exec()
-    .then((doc) => {
-      console.log(doc);
-      res.status(200).json({
-        message: "stock deleted",
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        error,
-      });
-    });
-});
 
-router.post("/addStocks", checkAuth, (req, res, next) => {
-  //   console.log(req.body.stockId);
-  const stocks = [];
-  for (let i = 0; i < req.body.stocks.length; i++) {
-    // if (!symbols.has(req.body.stocks[i].symbol)) {
-    const stock = {
-      _id: mongoose.Types.ObjectId(),
-      symbol: req.body.stocks[i].symbol,
-      purchasePrice: req.body.stocks[i].purchasePrice,
-      shares: 0,
-      priceWhenAdded: req.body.stocks[i].currentPrice,
-    };
-    stocks.push(stock);
-    // }
-  }
-  //   Portfolio.find({ _id: req.body.portfolioId })
-  //     .exec()
-  //     .then((doc) => {
-  //       console.log("doc", doc[0].stocks.length);
-  //       const symbols = new Set();
-  //       doc[0].stocks.forEach((stockObject) => {
-  //         symbols.add(stockObject.symbol);
-  //       });
-  //       console.log(symbols);
-  //       for (let i = 0; i < req.body.stocks.length; i++) {
-  //         if (!symbols.has(req.body.stocks[i].symbol)) {
-  //           const stock = {
-  //             _id: mongoose.Types.ObjectId(),
-  //             symbol: req.body.stocks[i].symbol,
-  //             purchasePrice: req.body.stocks[i].purchasePrice,
-  //             shares: 0,
-  //             priceWhenAdded: req.body.stocks[i].currentPrice,
-  //           };
-  //           stocks.push(stock);
-  //         }
-  //       }
-  //     })
-  //     .catch();
-  console.log(stocks);
-  Portfolio.findByIdAndUpdate(
-    { _id: req.body.portfolioId },
-    { $push: { stocks: stocks } }
-  )
-    .exec()
-    .then((doc) => {
-      res.status(200).json({
-        message: "stocks updated",
-      });
-    })
-    .catch((error) => {
-      res.status(500).json({
-        error,
-      });
-    });
-});
+//handle portfolio
+router.post('/create',(req,res)=> portfolioController.createPortfolio(req,res));// required && done refactored
+router.get('/all',(req,res)=> portfolioController.getAllPortfolios(req,res));// done refactored
+router.patch('/update',(req,res)=> portfolioController.updateNameInPortfolio(req,res));// required refactored
+router.delete('/delete/:id/:pid',(req,res)=> portfolioController.deletePortfolioById(req,res));// required && done refactored
+router.get('/:id',(req,res)=> portfolioController.getPortfolioById(req,res));// required && done refactored
 
-module.exports = router;
+module.exports =router;

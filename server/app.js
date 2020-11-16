@@ -1,35 +1,23 @@
 const express = require("express");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
-const bodyParser = require("body-parser");
 const cors = require('cors');
-const connectDB = require("./config/db");
+const connectDb = require("./database/index");
+const routes = require('./routes/index');
+
 dotenv.config({ path: "./config/config.env" });
-
-const indexRoute = require("./routes/index");
-const userRoute = require("./routes/user");
-const dashboardRoute = require("./routes/dashboard");
-const portfolioRoute = require("./routes/portfolio");
-const stockRoute = require("./routes/stocks");
-connectDB();
-
-// initialize app
-
+const PORT = process.env.PORT || 8000;
 const app = express();
-// app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
-// logging if in development
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-const PORT = process.env.PORT || 8000;
+connectDb();
 
-app.use("/", indexRoute);
-app.use("/api/user", userRoute);
-app.use("/api/dashboard", dashboardRoute);
-app.use("/api/portfolio", portfolioRoute);
-app.use("/api/stocks",stockRoute);
+
+
+app.use('/api',routes);
 
 app.listen(PORT, () => {
   console.log(`server is running in ${process.env.NODE_ENV} on port : ${PORT}`);
