@@ -1,105 +1,76 @@
 const PortfolioService = require("../service/portfolioService");
-const UserService = require("../service/userService");
-const util = require("util");
 
 const portfolioService = new PortfolioService();
-const userService = new UserService();
 
 class PortfolioController {
   async createPortfolio(req, res) {
-    let data = req.body;
-    console.log("portfolioController", data);
+    const { userId } = req.userData;
+    const data = req.body;
+    console.log("portfolioController", data, userId);
     try {
-      let portfolioExist = await userService.getUserPortfolioByName(
-        data.userId,
-        data.name
+      let portfolioExist = await portfolioService.getUserPortfolioByName(
+        userId,
+        data.portfolioname
       );
-      // console.log("pE", util.inspect(portfolioExist, false, 3, true));
       if (!portfolioExist) {
-        let newPortfolio = await portfolioService.createPortfolio(data);
-        let updateUserPortfolioRecord = await userService.addUserPortfolio(
-          data.userId,
-          newPortfolio._id,
-          newPortfolio.name
-        );
-        console.log("update user portfolio record", updateUserPortfolioRecord);
-        if (updateUserPortfolioRecord) {
+        let newPortfolio = await portfolioService.createPortfolio(userId, data);
+        // console.log("update user portfolio record", newPortfolio);
+        if (newPortfolio) {
           res.status(200).json(newPortfolio);
         } else {
-          res.status(500).json({ message: "error occured1" });
+          throw new Error("error creating portfolio");
         }
       } else {
-        res.status(500).json({ message: "portfolio name already exist" });
+        throw new Error("portfolio name already exist");
       }
     } catch (err) {
-      res.status(500).json({ message: "error occured" });
+      res.status(500).json({ message: err.message });
     }
   }
 
-  async deletePortfolioById(req, res) {
-    console.log(req.params.id, req.params.pid);
-    console.log("controller hit");
-    let id = req.params.pid;
+  async getAllUserPortfolios(req, res) {
+    const { userId } = req.userData;
+    console.log("all portfolios");
     try {
-      let portfolio = await portfolioService.getPortfolioById(id);
-      console.log("portfolio", portfolio);
-      let portfolioDeleted = await portfolioService.deletePortfolioById(id);
-      console.log("portfolio deleted", portfolioDeleted);
-      // let deleteUserPortfolioRecord = await userService.deleteUserPortfolio(
-      //   portfolio[0].userId,
-      //   id
-      // );
-      let deleteUserPortfolioRecord = await userService.deleteUserPortfolio(
-        req.params.id,
-        id
+      let portfolios = await portfolioService.getAllPortfoliosByUserId(userId);
+      if (portfolios.length >= 1) {
+        res.status(200).json(portfolios);
+      } else {
+        res.status(404).json({ message: "no portfolios found" });
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
+  async updateNameInPortfolio(req, res) {
+    try {
+      const { userId } = req.userData;
+      const data = req.body;
+      let portfolio = await portfolioService.getPortfolioById(
+        userId,
+        data.portfolioId
       );
-
-      console.log("deleted user porfolio reacord", deleteUserPortfolioRecord);
-      if (deleteUserPortfolioRecord.nModified === 1) {
-        res.status(200).json({ message: "portfolio deleted" });
-      } else {
-        res.status(500).json({ message: "error occured" });
-      }
-    } catch (err) {
-      res.status(500).json({ message: "error occured" });
-    }
-  }
-
-  async updateNameInPortfolio(req, res, next) {
-    let data = req.body;
-    try {
-      // get data from portfolio by id and check if the new name === name
-      let portfolio = await portfolioService.getPortfolioById(data.portfolioId);
-      // console.log('portfolio',data.newName,portfolio[0].name);
-      if (data.newName !== portfolio[0].name) {
-        let portfolioConfictName = await portfolioService.getPortfolioByName(
-          data.newName
+      // console.log("pf", portfolio);
+      if (portfolio) {
+        let portfolioNameExist = await portfolioService.getUserPortfolioByName(
+          userId,
+          data.portfolioname
         );
-        console.log(portfolioConfictName.length);
-        if (portfolioConfictName.length < 1) {
-          let updatedName = await portfolioService.updatePortfolioByName(
-            data.portfolioId,
-            data.newName
+        if (!portfolioNameExist) {
+          let updated = await portfolioService.updatePortfolioByName(
+            portfolio._id,
+            data.portfolioname
           );
-          console.log("updatedName", updatedName);
-          if (updatedName.nModified === 1) {
-            await userService.updateUserPortfolioName(
-              data.userId,
-              data.portfolioId,
-              data.newName
-            );
-            res.status(200).json({ message: "portfolio name update" });
-          } else {
-            // res.status(500).json({ message: "error 1" });
-            throw new Error("name not updated");
-          }
+          // console.log(updated);
+          res
+            .status(200)
+            .json({ message: "portfolio name updated successfully" });
         } else {
-          // res.status(500).json({ message: "portfolio with this name exist" });
-          throw new Error("portfolio with this name already exist");
+          throw new Error("try giving a different name");
         }
       } else {
-        // res.status(500).json({ message: "same name" });
-        throw new Error("please try again with a diffrent name");
+        res.status(404).json({ message: "portfolio not found" });
       }
     } catch (err) {
       console.log(err);
@@ -107,53 +78,104 @@ class PortfolioController {
     }
   }
 
-  async getPortfolioById(req, res) {
+  async deletePortfolioById(req, res) {
+    const { userId } = req.userData;
+    const id = req.params.id;
     try {
-      let id = req.params.id;
-      let portfolio = await portfolioService.getPortfolioById(id);
-      if (portfolio.length === 1) {
-        res.status(200).json(portfolio);
+      let portfolio = await portfolioService.getPortfolioById(userId, id);
+      // console.log("portfolio", portfolio);
+      if (portfolio) {
+        let portfolioDeleted = await portfolioService.deletePortfolioById(
+          userId,
+          id
+        );
+        // console.log("portfolio deleted", portfolioDeleted);
+        if (portfolioDeleted) {
+          res.status(200).json({ message: "portfolio deleted successfully" });
+        } else {
+          throw new Error("error deleting portfolio");
+        }
       } else {
-        res.status(500).json({ message: "portfolio does not exist" });
+        res.status(404).json({ message: "portfolio not found" });
       }
     } catch (err) {
-      res.status(500).json({ message: "error occured" });
+      res.status(500).json({ error: err.message });
     }
   }
 
-  async getAllPortfolios(req, res) {
-    console.log("all portfolios");
+  async getPortfolioById(req, res) {
     try {
-      let portfolios = await portfolioService.getAllPortfolios();
-      res.status(200).json(portfolios);
+      const { userId } = req.userData;
+      let id = req.params.id;
+      let portfolio = await portfolioService.getPortfolioById(userId, id);
+      if (portfolio) {
+        res.status(200).json(portfolio);
+      } else {
+        res.status(404).json({ message: "portfolio does not exist" });
+      }
     } catch (err) {
-      res.status(500).json({ message: "error occured" });
+      res.status(500).json({ error: err.message });
     }
   }
 
   async addStockInPortfolio(req, res) {
     try {
-      let stockAdded = await portfolioService.addStock(req.body);
-      if (stockAdded.nModified === 1) {
-        console.log("stock added", stockAdded);
-        res.status(200).json({ message: "stock added" });
+      const data = req.body;
+      const { userId } = req.userData;
+      let portfolio = await portfolioService.getPortfolioById(
+        userId,
+        data.portfolioId
+      );
+      if (portfolio) {
+        let stockExist = await portfolioService.getStockBySymbol(
+          data.portfolioId,
+          data.stock.symbol
+        );
+        console.log("stock exist");
+        if (!stockExist) {
+          let stockAdded = await portfolioService.addStock(
+            portfolio._id,
+            data.stock
+          );
+          if (stockAdded.nModified === 1) {
+            console.log("stock added", stockAdded);
+            res.status(200).json({ message: "stock added" });
+          } else {
+            throw new Error("error adding stock");
+          }
+        } else {
+          throw new Error("stock already exist");
+        }
       } else {
-        res.status(500).json({ message: "error adding stock" });
+        res.status(404).json({ message: "portfolio not found" });
       }
     } catch (err) {
-      res.status(500).json({ message: "error occured" });
+      res.status(500).json({ error: err.message });
     }
   }
 
   async addMultiStockInPortfolio(req, res) {
     try {
-      let stocksAdded = await portfolioService.addMultiStock(req.body);
-      if (stocksAdded.nModified === 1) {
-        res.status(200).json({ message: "stocks added" });
+      const data = req.body;
+      const { userId } = req.userData;
+      let portfolio = await portfolioService.getPortfolioById(
+        userId,
+        data.portfolioId
+      );
+      console.log("object", portfolio);
+      if (portfolio) {
+        let stocksAdded = await portfolioService.addMultiStock(
+          data.portfolioId,
+          data.stocks
+        );
+        if (stocksAdded.nModified === 1) {
+          res.status(200).json({ message: "stocks added" });
+        } else {
+          throw new Error("error adding stocks");
+        }
       } else {
-        res.status(500).json({ message: "error" });
+        res.status(404).json({ message: "portfolio not found" });
       }
-      // console.log('stocks added',stockAdded);
     } catch (err) {
       res.status(500).json({ message: "error occured" });
     }
@@ -161,27 +183,39 @@ class PortfolioController {
 
   async updatestockInPortfolio(req, res) {
     try {
-      let stockUpdated = await portfolioService.updateStock(req.body);
-      if (stockUpdated.nModified === 1) {
-        console.log("stock updated", stockUpdated);
-        res.status(200).json({ message: "stock updated" });
+      const data = req.body;
+      const { userId } = req.userData;
+      let stock = await portfolioService.getStockById(userId, data.stockId);
+      if (stock) {
+        let updateStock = await portfolioService.updateStock(userId, data);
+        if (updateStock.nModified === 1) {
+          res.status(200).json({ message: "stock updated successfully" });
+        } else {
+          throw new Error("error updating stock");
+        }
       } else {
-        console.log("stock not found", stockUpdated);
-        res.status(500).json({ message: "stock not found" });
+        res.status(404).json({ message: "stock not found" });
       }
     } catch (err) {
-      res.status(500).json({ message: "error occured" });
+      res.status(500).json({ error: err.message });
     }
   }
 
   async deletestockInPortfolio(req, res) {
     try {
-      let stockDeleted = await portfolioService.deleteStock(req.params.id);
-      if (stockDeleted.nModified === 1) {
-        console.log("stock deleted", stockDeleted);
-        res.status(200).json({ message: "stock deleted" });
+      const stockId = req.params.id;
+      const { userId } = req.userData;
+      let stock = await portfolioService.getStockById(userId, stockId);
+      if (stock) {
+        let stockDeleted = await portfolioService.deleteStockById(stockId);
+        if (stockDeleted.nModified === 1) {
+          // console.log("stock deleted", stockDeleted);
+          res.status(200).json({ message: "stock deleted" });
+        } else {
+          throw new Error("error deleting stock");
+        }
       } else {
-        res.status(500).json({ message: "stock not found" });
+        res.status(404).json({ message: "stock not found" });
       }
     } catch (err) {
       res.status(500).json({ message: "error occured" });

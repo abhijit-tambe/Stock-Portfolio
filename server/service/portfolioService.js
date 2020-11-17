@@ -1,54 +1,52 @@
+const portfolio = require("../database/models/portfolio");
 const Portfolio = require("../database/models/portfolio");
 
 class PortfolioService {
-  createPortfolio(data) {
+  createPortfolio(userId, data) {
     let portfolio = new Portfolio();
-    portfolio.name = data.name;
-    // portfolio.userId = data.userId;
+    portfolio.portfolioname = data.portfolioname;
+    portfolio.userId = userId;
     portfolio.stocks = data.stocks;
     return portfolio.save();
   }
 
-  deletePortfolioById(id) {
-    return Portfolio.findByIdAndDelete({ _id: id });
+  deletePortfolioById(userId, id) {
+    return Portfolio.findByIdAndDelete({ _id: id, userId });
   }
 
-  updatePortfolioByName(id, name) {
-    return Portfolio.update({ _id: id }, { $set: { name: name } }).exec();
+  updatePortfolioByName(id, portfolioname) {
+    return Portfolio.update({ _id: id }, { $set: { portfolioname } }).exec();
   }
 
-  getAllPortfolios() {
+  getAllPortfoliosByUserId(userId) {
     //    return Portfolio.find({}).populate('userId').exec();
-    return Portfolio.find({}).exec();
+    return Portfolio.find({ userId }).exec();
   }
 
-  getPortfolioByName(name) {
-    return Portfolio.find({ name: name });
-  }
+  // getPortfolioByName(name) {
+  //   return Portfolio.find({ name: name });
+  // }
 
-  getPortfolioById(id) {
+  getPortfolioById(userId, id) {
     // return Portfolio.find({_id:id}).populate('userId').exec();
-    return Portfolio.find({ _id: id }).exec();
+    return Portfolio.findById({ _id: id, userId }).exec();
   }
 
-  addStock(data) {
+  addStock(id, stock) {
     console.log("hit");
-    return Portfolio.update(
-      { _id: data.portfolioId },
-      { $push: { stocks: data.stock } }
-    );
+    return Portfolio.update({ _id: id }, { $push: { stocks: stock } });
   }
 
-  addMultiStock(data) {
+  addMultiStock(portfolioId, stocks) {
     return Portfolio.updateMany(
-      { _id: data.portfolioId },
-      { $push: { stocks: { $each: data.stock } } }
+      { _id: portfolioId },
+      { $push: { stocks: { $each: stocks } } }
     );
   }
 
-  updateStock(data) {
+  updateStock(userId, data) {
     return Portfolio.update(
-      { "stocks._id": data.stockId },
+      { userId, "stocks._id": data.stockId },
       {
         $set: {
           "stocks.$.purchasePrice": data.purchasePrice,
@@ -59,7 +57,7 @@ class PortfolioService {
     // db.portfolios.update({"stocks._id":ObjectId("5facaf52d896e6417c05db66")},{$set:{"stocks.$.purchasePrice":4000,"stocks.$.shares":50}})
   }
 
-  deleteStock(id) {
+  deleteStockById(id) {
     console.log("hit");
     return Portfolio.update(
       { "stocks._id": id },
@@ -67,6 +65,18 @@ class PortfolioService {
     );
     // db.portfolios.update({_id: ObjectId("5fac6c193d599876b44eb28e")},{$pull:{stocks:{_id:ObjectId("5fac6c193d599876b44eb28f")}}})
     // db.portfolios.update({"stocks._id":ObjectId("5facaeced896e6417c05db65")},{$pull:{stocks:{_id:ObjectId("5facaeced896e6417c05db65")}}})
+  }
+
+  getStockById(userId, stockId) {
+    return Portfolio.findOne({ userId, "stocks._id": stockId }).exec();
+  }
+
+  getUserPortfolioByName(userId, portfolioname) {
+    return Portfolio.findOne({ userId, portfolioname }).exec();
+  }
+
+  getStockBySymbol(id, symbol) {
+    return portfolio.findOne({ _id: id, "stocks.symbol": symbol }).exec();
   }
 }
 
