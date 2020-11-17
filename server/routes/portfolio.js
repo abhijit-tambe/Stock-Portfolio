@@ -1,25 +1,25 @@
 const express = require("express");
 const router = express.Router();
-// const checkAuth = require("../middleware/jwtAuth");
-// const mongoose = require("mongoose");
-// const Portfolio = require("../models/portfolio");
-// const Stock = require("../models/stock");
+const auth = require("../middleware/jwtAuth");
+
 const PortfolioController = require('../controller/portfolioController');
 
 const portfolioController = new PortfolioController();
 
-//handle embeded stock in portfolio
-router.post('/stock/add',(req,res)=> portfolioController.addStockInPortfolio(req,res));// required && done refactored
-router.post('/stock/multiadd',(req,res)=> portfolioController.addMultiStockInPortfolio(req,res));// done refactiored
-router.patch('/stock/update',(req,res)=> portfolioController.updatestockInPortfolio(req,res));// required && done refactored
-router.delete('/stock/delete/:id',(req,res)=> portfolioController.deletestockInPortfolio(req,res));//required && done refactored
+//required to handle portfolio routes
+router.post('/create',auth,(req,res)=> portfolioController.createPortfolio(req,res));// r & d
+router.get('/all',auth,(req,res)=> portfolioController.getAllUserPortfolios(req,res));// r & d 
+router.patch('/update',auth,(req,res)=> portfolioController.updateNameInPortfolio(req,res));// r & d
+router.delete('/delete/:id',auth,(req,res)=> portfolioController.deletePortfolioById(req,res));// r & d
+// optional
+router.get('/:id',auth,(req,res)=> portfolioController.getPortfolioById(req,res));// o & d
 
 
-//handle portfolio
-router.post('/create',(req,res)=> portfolioController.createPortfolio(req,res));// required && done refactored
-router.get('/all',(req,res)=> portfolioController.getAllPortfolios(req,res));// done refactored
-router.patch('/update',(req,res)=> portfolioController.updateNameInPortfolio(req,res));// required refactored
-router.delete('/delete/:id/:pid',(req,res)=> portfolioController.deletePortfolioById(req,res));// required && done refactored
-router.get('/:id',(req,res)=> portfolioController.getPortfolioById(req,res));// required && done refactored
+//required to handle embeded stock routes
+router.post('/stock/add',auth,(req,res)=> portfolioController.addStockInPortfolio(req,res));// r & d
+router.patch('/stock/update',auth,(req,res)=> portfolioController.updatestockInPortfolio(req,res));// r & d
+router.delete('/stock/delete/:id',auth,(req,res)=> portfolioController.deletestockInPortfolio(req,res));// r & d
+//optional
+router.post('/stock/multiadd',auth,(req,res)=> portfolioController.addMultiStockInPortfolio(req,res));// o & d
 
 module.exports =router;

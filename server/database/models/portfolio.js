@@ -4,13 +4,16 @@ const Schema = mongoose.Schema;
 
 const stockSchema = new Schema(
   {
-    symbol: String,
+    symbol: {type:String,
+      required:true,},
     shares: {
       type: Number,
       default: 0,
     },
-    purchasePrice: Number,
-    addedPrice: Number,
+    purchasePrice: {type:Number,
+      required:true},
+    addedPrice: {type:Number,
+      required:true},
   },{
     timestamps:true
   }
@@ -18,11 +21,9 @@ const stockSchema = new Schema(
 
 
 const portfolioSchema = new Schema({
-  name: String,
-  // userId: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "user",
-  // },
+  portfolioname: {type:String,
+    required:true},
+  userId:String,
   stocks: [stockSchema],
 });
 
