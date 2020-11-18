@@ -1,5 +1,5 @@
-const PortfolioService = require("../service/portfolioService");
-const UserServie = require("../service/userService");
+const PortfolioService = require("../services/portfolioService");
+const UserServie = require("../services/userService");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
@@ -36,7 +36,7 @@ class userController {
     try {
       let user = await userService.getUserByEmail(data.email);
       if (user) {
-        console.log(user);
+        // console.log(user);
         let isMatch = await bcrypt.compare(data.password, user.password);
         // console.log(isMatch);
         if (isMatch === true) {
@@ -60,21 +60,6 @@ class userController {
     } catch (err) {
       console.log("error:", err.message);
       res.status(500).json({ error: err.message });
-    }
-  }
-
-  async getUserById(req, res) {
-    try {
-      let id = req.params.id;
-      let user = await userService.getUserById(id);
-      console.log("user", user);
-      if (user) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).json({ message: "user not fount" });
-      }
-    } catch (err) {
-      res.status(501).json({ error: err.message });
     }
   }
 
@@ -106,55 +91,36 @@ class userController {
     const { userId } = req.userData;
     const data = req.body;
     try {
-      // let user = await userService.getUserById(userId);
-      // console.log("user", user);
-      // if (user) {
-      //   console.log("user.portfolios", user.portfolios);
-      //   let userPortfolios = user.portfolios;
-
-      //   userPortfolios.forEach(async (portfolio) => {
-      //     console.log("portfolio", portfolio);
-      //     await portfolioService.deletePortfolioById(portfolio.id);
-      //   });
-
-      //   let userDeleted = await userService.deleteUserById(id);
-      //   console.log("userdel", userDeleted);
-      //   if (userDeleted) {
-      //     res.status(200).json({ message: "user deleted" });
-      //   } else {
-      //     throw new Error("error deleting user");
-      //   }
-      // } else {
-      //   res.status(404).json({ error: "user not found" });
-      // }
       const user = await userService.getUserById(userId);
-      console.log('object',user);
-      if(user){
-          let isMatch = bcrypt.compareSync(data.password,user.password);
-          if(isMatch){
-            const allUserPortfolios = await portfolioService.getAllPortfoliosByUserId(userId);
-            console.log(allUserPortfolios.length);
-            allUserPortfolios.forEach( async curPortfolio=>{
-              await portfolioService.deletePortfolioById(userId,curPortfolio._id);
-              // console.log(curPortfolio._id);
-            })
-            const deleteUser = await userService.deleteUserById(userId);
-            console.log('del',deleteUser);
-            if(deleteUser){
-              res.status(200).json({message:"user deleted successfully"})
-            }else{
-              throw new Error("error deleting user");
-            }
-          
-            
-          }else{
-            throw new Error("invalid credentials");
-          }
-          
-      }else{
-        res.status(404).json({message:"user not found"})
-      }
+      if (user) {
+        let isMatch = bcrypt.compareSync(data.password, user.password);
+        if (isMatch) {
+          // const allUserPortfolios = await portfolioService.getAllPortfoliosByUserId(
+          //   userId
+          // );
 
+          // allUserPortfolios.forEach(async (curPortfolio) => {
+          //   await portfolioService.deletePortfolioById(
+          //     userId,
+          //     curPortfolio._id
+          //   );
+          // });
+          const allUserPortfolios = await portfolioService.deleteAllPortfoliosByUserId(userId);
+          console.log(allUserPortfolios);
+
+          const deleteUser = await userService.deleteUserById(userId);
+          console.log("del", deleteUser);
+          if (deleteUser) {
+            res.status(200).json({ message: "user deleted successfully" });
+          } else {
+            throw new Error("error deleting user");
+          }
+        } else {
+          throw new Error("invalid credentials");
+        }
+      } else {
+        res.status(404).json({ message: "user not found" });
+      }
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
@@ -171,6 +137,21 @@ class userController {
       res.status(200).json(allUsers);
     } catch (err) {
       res.status(501).json({ message: "error" });
+    }
+  }
+
+  async getUserById(req, res) {
+    try {
+      let id = req.params.id;
+      let user = await userService.getUserById(id);
+      // console.log("user", user);
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: "user not fount" });
+      }
+    } catch (err) {
+      res.status(501).json({ error: err.message });
     }
   }
 }

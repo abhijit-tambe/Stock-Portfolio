@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/jwtAuth");
 
-const PortfolioController = require('../controller/portfolioController');
+const PortfolioController = require('../controllers/portfolioController');
 
 const portfolioController = new PortfolioController();
 

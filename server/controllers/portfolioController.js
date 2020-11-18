@@ -1,4 +1,4 @@
-const PortfolioService = require("../service/portfolioService");
+const PortfolioService = require("../services/portfolioService");
 
 const portfolioService = new PortfolioService();
 
@@ -6,7 +6,7 @@ class PortfolioController {
   async createPortfolio(req, res) {
     const { userId } = req.userData;
     const data = req.body;
-    console.log("portfolioController", data, userId);
+    // console.log("portfolioController", data, userId);
     try {
       let portfolioExist = await portfolioService.getUserPortfolioByName(
         userId,
@@ -30,7 +30,7 @@ class PortfolioController {
 
   async getAllUserPortfolios(req, res) {
     const { userId } = req.userData;
-    console.log("all portfolios");
+    // console.log("all portfolios");
     try {
       let portfolios = await portfolioService.getAllPortfoliosByUserId(userId);
       if (portfolios.length >= 1) {
@@ -122,16 +122,19 @@ class PortfolioController {
     try {
       const data = req.body;
       const { userId } = req.userData;
+      console.log(userId,data);
       let portfolio = await portfolioService.getPortfolioById(
         userId,
         data.portfolioId
       );
+      console.log('pf',portfolio);
       if (portfolio) {
+        console.log('inside')
         let stockExist = await portfolioService.getStockBySymbol(
           data.portfolioId,
           data.stock.symbol
         );
-        console.log("stock exist");
+        console.log("stock exist",stockExist);
         if (!stockExist) {
           let stockAdded = await portfolioService.addStock(
             portfolio._id,
@@ -162,7 +165,7 @@ class PortfolioController {
         userId,
         data.portfolioId
       );
-      console.log("object", portfolio);
+      // console.log("object", portfolio);
       if (portfolio) {
         let stocksAdded = await portfolioService.addMultiStock(
           data.portfolioId,

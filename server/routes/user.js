@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const auth = require('../middleware/jwtAuth');
-const UserController = require('../controller/userController');
+const UserController = require('../controllers/userController');
 
 let userController = new UserController(); 
 
+//required
 router.post('/sign-up',(req,res)=>userController.singUpUser(req,res));// r & d
 router.post('/sign-in',(req,res)=>userController.signInUser(req,res));//r & d
 router.patch('/update',auth,(req,res)=> userController.updateUserPassword(req,res));// r & d
