@@ -1,36 +1,36 @@
-const User = require("../database/models/user");
+const User = require("../models/user");
 
 class UserService {
   createUser(email, username, hash) {
     let user = new User({ email, username, password: hash });
     return user.save();
-  }
-
-  // signInUser(email, password) {
-  //   return User.findOne({ email, password }).exec();
-  // }
+  } //r
 
   getUserById(id) {
     // return User.findById({ _id: id }).select({"password":0, "__v":0}).exec();
     return User.findById({ _id: id }).select({ __v: 0 }).exec();
-  }
+  } //r
 
   getUserByEmail(email) {
     return User.findOne({ email });
-  }
+  } //r
 
   updateUserPassword(id, password) {
     return User.updateOne({ _id: id }, { $set: { password } });
-  }
+  } //r
 
   deleteUserById(id) {
     return User.findByIdAndDelete({ _id: id });
-  }
+  } //r
 
   getAllUsers() {
     // return User.find({}).populate('portfolios').exec();
     return User.find({}).exec();
-  }
+  } //r
+
+  // signInUser(email, password) {
+  //   return User.findOne({ email, password }).exec();
+  // }
 
   // addUserPortfolio(userId, id, name) {
   //   console.log("adduser service");
@@ -63,6 +63,3 @@ class UserService {
 }
 
 module.exports = UserService;
-
-// db.portfolio.update({_id: ObjectId("5fac251c8f120e5af8d89310")},{$pull:{stocks:{_id:ObjectId("5fac251c8f120e5af8d89311")}}})
-// db.portfolios.update({_id: ObjectId("5fac6c193d599876b44eb28e")},{$pull:{stocks:{_id:ObjectId("5fac6c193d599876b44eb28f")}}})
